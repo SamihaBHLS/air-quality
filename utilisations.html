@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Utilisations - Capteur de Qualité de l'Air</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Variables et styles de base avec les nouvelles couleurs */
+        :root {
+            --primary-color: #a9d3f5;
+            --secondary-color: #d2e7f7;
+            --accent-color: #7bb8f0;
+            --light-color: #f0f8ff;
+            --dark-color: #7bb8f0;
+            --text-color: #2c3e50;
+            --text-light: #5d7a9c;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: #f9f9f9;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        section {
+            padding: 80px 0;
+        }
+        
+        h1, h2, h3 {
+            margin-bottom: 20px;
+            color: var(--text-color);
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            line-height: 1.2;
+        }
+        
+        h2 {
+            font-size: 2.2rem;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 0;
+            width: 80px;
+            height: 4px;
+            background-color: var(--accent-color);
+        }
+        
+        p {
+            margin-bottom: 15px;
+            color: var(--text-light);
+        }
+        
+        /* Animation pour les titres */
+        .animated-title {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.8s ease forwards;
+        }
+        
+        .animated-title.delay-1 {
+            animation-delay: 0.2s;
+        }
+        
+        .animated-title.delay-2 {
+            animation-delay: 0.4s;
+        }
+        
+        .animated-title.delay-3 {
+            animation-delay: 0.6s;
+        }
+        
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Animation pour le texte */
+        .animated-text {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s ease forwards;
+        }
+        
+        .animated-text.delay-1 {
+            animation-delay: 0.3s;
+        }
+        
+        .animated-text.delay-2 {
+            animation-delay: 0.5s;
+        }
+        
+        .animated-text.delay-3 {
+            animation-delay: 0.7s;
+        }
+        
+        /* Bouton avec animation */
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+        
+        .btn:hover::before {
+            left: 100%;
+        }
+        
+        .btn:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .btn:active {
+            transform: translateY(-1px);
+        }
+        
+        /* Navigation */
+        nav {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            transform: translateY(0);
+            transition: transform 0.3s ease;
+        }
+        
+        nav.hidden {
+            transform: translateY(-100%);
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-color);
+            text-decoration: none;
+            opacity: 0;
+            animation: fadeInLeft 0.8s ease 0.2s forwards;
+        }
+        
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-left: 30px;
+            opacity: 0;
+            animation: fadeInRight 0.8s ease forwards;
+        }
+        
+        .nav-links li:nth-child(1) { animation-delay: 0.3s; }
+        .nav-links li:nth-child(2) { animation-delay: 0.4s; }
+        .nav-links li:nth-child(3) { animation-delay: 0.5s; }
+        .nav-links li:nth-child(4) { animation-delay: 0.6s; }
+        .nav-links li:nth-child(5) { animation-delay: 0.7s; }
+        
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--accent-color);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        .nav-links a:hover {
+            color: var(--accent-color);
+        }
+        
+        /* Section Hero */
+        #utilisations-hero {
+            background: linear-gradient(rgba(169, 211, 245, 0.85), rgba(210, 231, 247, 0.85));
+            background-size: cover;
+            background-position: center;
+            color: var(--text-color);
+            padding: 180px 0 100px;
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+        }
+        
+        /* Section Utilisations */
+        #utilisations-content {
+            background-color: var(--light-color);
+        }
+        
+        .utilisation-intro {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto 60px;
+        }
+        
+        .utilisation-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .utilisation-card {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .utilisation-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .utilisation-img {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .utilisation-content {
+            padding: 25px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .utilisation-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .utilisation-icon {
+            font-size: 2rem;
+            margin-right: 15px;
+            color: var(--accent-color);
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--secondary-color);
+            border-radius: 50%;
+        }
+        
+        .utilisation-title {
+            font-size: 1.4rem;
+            margin: 0;
+        }
+        
+        .utilisation-features {
+            list-style: none;
+            margin: 15px 0;
+            flex-grow: 1;
+        }
+        
+        .utilisation-features li {
+            margin-bottom: 10px;
+            padding-left: 25px;
+            position: relative;
+        }
+        
+        .utilisation-features li::before {
+            content: '•';
+            position: absolute;
+            left: 10px;
+            color: var(--accent-color);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        /* Section Impact */
+        #impact {
+            background-color: var(--secondary-color);
+        }
+        
+        .impact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .impact-card {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+        
+        .impact-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .impact-icon {
+            font-size: 2.5rem;
+            color: var(--accent-color);
+            margin-bottom: 15px;
+        }
+        
+        /* Section CTA */
+        #cta {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: white;
+            text-align: center;
+            padding: 80px 0;
+        }
+        
+        .cta-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .cta-content h2, .cta-content p {
+            color: white;
+        }
+        
+        .cta-content .btn {
+            background-color: white;
+            color: var(--accent-color);
+        }
+        
+        .cta-content .btn:hover {
+            background-color: var(--light-color);
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--primary-color);
+            color: var(--text-color);
+            text-align: center;
+            padding: 40px 0;
+        }
+        
+        .footer-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            margin: 20px 0;
+        }
+        
+        .footer-links li {
+            margin: 0 15px;
+        }
+        
+        .footer-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: white;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            h2 {
+                font-size: 1.8rem;
+            }
+            
+            .utilisation-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .utilisation-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .utilisation-icon {
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="logo"><i class="fas fa-wind"></i> AirQuality</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Accueil</a></li>
+                <li><a href="importance.html">Importance</a></li>
+                <li><a href="evolution.html">Évolution</a></li>
+                <li><a href="utilisations.html" class="active">Utilisations</a></li>
+                <li><a href="projet.html">Mon Projet</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Section Hero -->
+    <section id="utilisations-hero">
+        <div class="container">
+            <h1 class="animated-title">Où utilise-t-on les capteurs de qualité de l'air ?</h1>
+            <p class="animated-text delay-1">Découvrez les multiples applications des capteurs de qualité de l'air dans notre vie quotidienne et leur rôle essentiel pour protéger notre santé et notre environnement.</p>
+        </div>
+    </section>
+
+    <!-- Section Contenu Principal -->
+    <section id="utilisations-content">
+        <div class="container">
+            <div class="utilisation-intro">
+                <h2 class="animated-title">Des applications multiples et essentielles</h2>
+                <p class="animated-text delay-1">Les capteurs de qualité de l'air ne sont pas seulement des outils scientifiques. Ils sont utilisés dans plusieurs domaines de la vie quotidienne pour protéger la santé et améliorer l'environnement.</p>
+            </div>
+
+            <!-- Cartes des utilisations -->
+            <div class="utilisation-cards">
+                <!-- Utilisation 1: Villes et espaces publics -->
+                <div class="utilisation-card animated-text">
+                    <div class="utilisation-img" style="background-image: url('./image/ville.jpg');"></div>
+                    <div class="utilisation-content">
+                        <div class="utilisation-header">
+                            <div class="utilisation-icon">
+                                <i class="fas fa-city"></i>
+                            </div>
+                            <h3 class="utilisation-title">Villes et espaces publics</h3>
+                        </div>
+                        <p>Surveillance continue de la qualité de l'air dans les environnements urbains.</p>
+                        <ul class="utilisation-features">
+                            <li>Installation dans les rues, parcs et stations de transport</li>
+                            <li>Mesure des niveaux de pollution pour informer citoyens et autorités</li>
+                            <li>Limitation de la circulation quand la pollution est élevée</li>
+                            <li>Alertes en temps réel pour la population</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Utilisation 2: Hôpitaux et écoles -->
+                <div class="utilisation-card animated-text delay-1">
+                    <div class="utilisation-img" style="background-image: url('./image/hospital.jpg');"></div>
+                    <div class="utilisation-content">
+                        <div class="utilisation-header">
+                            <div class="utilisation-icon">
+                                <i class="fas fa-hospital-user"></i>
+                            </div>
+                            <h3 class="utilisation-title">Hôpitaux et écoles</h3>
+                        </div>
+                        <p>Protection des populations vulnérables dans les environnements sensibles.</p>
+                        <ul class="utilisation-features">
+                            <li>Contrôle de la qualité de l'air pour les patients respiratoires</li>
+                            <li>Protection des enfants et adaptation des activités scolaires</li>
+                            <li>Surveillance des salles de classe et des espaces communs</li>
+                            <li>Prévention des maladies liées à la pollution intérieure</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Utilisation 3: Maisons et bureaux -->
+                <div class="utilisation-card animated-text delay-2">
+                    <div class="utilisation-img" style="background-image: url('./image/mason.jpg');"></div>
+                    <div class="utilisation-content">
+                        <div class="utilisation-header">
+                            <div class="utilisation-icon">
+                                <i class="fas fa-home"></i>
+                            </div>
+                            <h3 class="utilisation-title">Maisons et bureaux</h3>
+                        </div>
+                        <p>Surveillance personnelle de la qualité de l'air dans les espaces de vie.</p>
+                        <ul class="utilisation-features">
+                            <li>Capteurs domestiques pour l'air intérieur</li>
+                            <li>Détection de fumée, poussière et produits chimiques</li>
+                            <li>Recommandations pour aérer au bon moment</li>
+                            <li>Amélioration de la qualité de vie et du bien-être</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Utilisation 4: Laboratoires et recherche -->
+                <div class="utilisation-card animated-text delay-3">
+                    <div class="utilisation-img" style="background-image: url('./image/laboratoire.jpg');"></div>
+                    <div class="utilisation-content">
+                        <div class="utilisation-header">
+                            <div class="utilisation-icon">
+                                <i class="fas fa-flask"></i>
+                            </div>
+                            <h3 class="utilisation-title">Laboratoires et recherche</h3>
+                        </div>
+                        <p>Outils essentiels pour la recherche scientifique et l'innovation.</p>
+                        <ul class="utilisation-features">
+                            <li>Analyse précise de la composition de l'air</li>
+                            <li>Étude des causes et effets de la pollution</li>
+                            <li>Développement de solutions écologiques</li>
+                            <li>Validation des nouvelles technologies</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Utilisation 5: Gouvernements et organisations -->
+                <div class="utilisation-card animated-text">
+                    <div class="utilisation-img" style="background-image: url('./image/organisations.jpg');"></div>
+                    <div class="utilisation-content">
+                        <div class="utilisation-header">
+                            <div class="utilisation-icon">
+                                <i class="fas fa-landmark"></i>
+                            </div>
+                            <h3 class="utilisation-title">Gouvernements et organisations</h3>
+                        </div>
+                        <p>Prise de décisions éclairées pour les politiques environnementales.</p>
+                        <ul class="utilisation-features">
+                            <li>Création de cartes de pollution détaillées</li>
+                            <li>Établissement de lois et réglementations</li>
+                            <li>Contrôle des industries polluantes</li>
+                            <li>Information et sensibilisation du public</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Utilisation 6: Applications spéciales -->
+                <div class="utilisation-card animated-text delay-1">
+                    <div class="utilisation-img" style="background-image: url('./image/transports.jpg');"></div>"
+                        <div class="utilisation-header">
+                            <div class="utilisation-icon">
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <h3 class="utilisation-title">Applications spéciales</h3>
+                        </div>
+                        <p>Utilisations innovantes et spécifiques des capteurs de qualité d'air.</p>
+                        <ul class="utilisation-features">
+                            <li>Surveillance dans les transports publics</li>
+                            <li>Contrôle dans les musées et archives</li>
+                            <li>Utilisation agricole pour les serres</li>
+                            <li>Applications sportives et de plein air</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section Impact -->
+    <section id="impact">
+        <div class="container">
+            <h2 class="animated-title">Impact des capteurs sur notre société</h2>
+            <p class="animated-text delay-1">Les capteurs de qualité de l'air transforment notre façon de vivre et de protéger notre environnement.</p>
+            
+            <div class="impact-grid">
+                <div class="impact-card animated-text delay-1">
+                    <div class="impact-icon">
+                        <i class="fas fa-heartbeat"></i>
+                    </div>
+                    <h3>Santé améliorée</h3>
+                    <p>Réduction des maladies respiratoires et cardiovasculaires grâce à une meilleure qualité de l'air.</p>
+                </div>
+                
+                <div class="impact-card animated-text delay-2">
+                    <div class="impact-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3>Décisions éclairées</h3>
+                    <p>Données précises pour prendre des décisions personnelles et politiques éclairées.</p>
+                </div>
+                
+                <div class="impact-card animated-text delay-3">
+                    <div class="impact-icon">
+                        <i class="fas fa-seedling"></i>
+                    </div>
+                    <h3>Environnement protégé</h3>
+                    <p>Surveillance continue permettant une meilleure protection de notre écosystème.</p>
+                </div>
+                
+                <div class="impact-card animated-text">
+                    <div class="impact-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>Communauté sensibilisée</h3>
+                    <p>Population mieux informée et plus engagée dans la protection de l'environnement.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section CTA -->
+    <section id="cta">
+        <div class="container">
+            <div class="cta-content">
+                <h2 class="animated-title">Rejoignez le mouvement pour un air plus pur</h2>
+                <p class="animated-text delay-1"><i class="fas fa-arrow-right"></i> En résumé, les capteurs de qualité de l'air sont utilisés partout : dans les villes, les écoles, les maisons, les hôpitaux et même au niveau international. Ils sont essentiels pour protéger notre santé et pour construire un avenir plus respectueux de l'environnement. <i class="fas fa-globe-americas"></i> <i class="fas fa-star"></i></p>
+                <p class="animated-text delay-2">Commencez dès aujourd'hui à surveiller la qualité de l'air autour de vous et contribuez à un avenir plus sain.</p>
+                <a href="projet.html" class="btn animated-text delay-3"><i class="fas fa-rocket"></i> Découvrir mon projet</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <h3><i class="fas fa-wind"></i> Capteur de Qualité de l'Air</h3>
+                <p>Un projet éducatif pour sensibiliser à l'importance de l'air pur.</p>
+                <ul class="footer-links">
+                    <li><a href="index.html"><i class="fas fa-home"></i> Accueil</a></li>
+                    <li><a href="importance.html"><i class="fas fa-info-circle"></i> Importance</a></li>
+                    <li><a href="evolution.html"><i class="fas fa-chart-line"></i> Évolution</a></li>
+                    <li><a href="utilisations.html"><i class="fas fa-map-marker-alt"></i> Utilisations</a></li>
+                    <li><a href="projet.html"><i class="fas fa-flask"></i> Mon Projet</a></li>
+                </ul>
+                <p><i class="far fa-copyright"></i> 2023 Projet Qualité de l'Air. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Animation de la navigation
+        let lastScrollY = window.scrollY;
+        const navbar = document.getElementById('navbar');
+        
+        function handleScroll() {
+            if (window.scrollY > lastScrollY && window.scrollY > 100) {
+                navbar.classList.add('hidden');
+            } else {
+                navbar.classList.remove('hidden');
+            }
+            
+            lastScrollY = window.scrollY;
+        }
+        
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            // Ajout des écouteurs d'événements
+            window.addEventListener('scroll', handleScroll);
+        });
+    </script>
+</body>
+</html>

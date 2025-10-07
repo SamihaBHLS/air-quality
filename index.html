@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Capteur de Qualité de l'Air</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Variables et styles de base avec les nouvelles couleurs */
+        :root {
+            --primary-color: #a9d3f5;
+            --secondary-color: #d2e7f7;
+            --accent-color: #7bb8f0;
+            --light-color: #f0f8ff;
+            --dark-color: #7bb8f0;
+            --text-color: #2c3e50;
+            --text-light: #5d7a9c;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: #f9f9f9;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        section {
+            padding: 80px 0;
+        }
+        
+        h1, h2, h3 {
+            margin-bottom: 20px;
+            color: var(--text-color);
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            line-height: 1.2;
+        }
+        
+        h2 {
+            font-size: 2.2rem;
+            text-align: center;
+            margin-bottom: 50px;
+            position: relative;
+        }
+        
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background-color: var(--accent-color);
+        }
+        
+        p {
+            margin-bottom: 15px;
+            color: var(--text-light);
+        }
+        
+        /* Animation pour les titres */
+        .animated-title {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.8s ease forwards;
+        }
+        
+        .animated-title.delay-1 {
+            animation-delay: 0.2s;
+        }
+        
+        .animated-title.delay-2 {
+            animation-delay: 0.4s;
+        }
+        
+        .animated-title.delay-3 {
+            animation-delay: 0.6s;
+        }
+        
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Animation pour le texte */
+        .animated-text {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s ease forwards;
+        }
+        
+        .animated-text.delay-1 {
+            animation-delay: 0.3s;
+        }
+        
+        .animated-text.delay-2 {
+            animation-delay: 0.5s;
+        }
+        
+        .animated-text.delay-3 {
+            animation-delay: 0.7s;
+        }
+        
+        /* Bouton avec animation */
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s ease 0.8s forwards;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+        
+        .btn:hover::before {
+            left: 100%;
+        }
+        
+        .btn:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .btn:active {
+            transform: translateY(-1px);
+        }
+        
+        /* Animation pulsante pour le bouton */
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(123, 184, 240, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(123, 184, 240, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(123, 184, 240, 0);
+            }
+        }
+        
+        .btn-pulse {
+            animation: pulse 2s infinite 1.5s;
+        }
+        
+        /* Navigation */
+        nav {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            transform: translateY(0);
+            transition: transform 0.3s ease;
+        }
+        
+        nav.hidden {
+            transform: translateY(-100%);
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-color);
+            text-decoration: none;
+            opacity: 0;
+            animation: fadeInLeft 0.8s ease 0.2s forwards;
+        }
+        
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-left: 30px;
+            opacity: 0;
+            animation: fadeInRight 0.8s ease forwards;
+        }
+        
+        .nav-links li:nth-child(1) { animation-delay: 0.3s; }
+        .nav-links li:nth-child(2) { animation-delay: 0.4s; }
+        .nav-links li:nth-child(3) { animation-delay: 0.5s; }
+        .nav-links li:nth-child(4) { animation-delay: 0.6s; }
+        .nav-links li:nth-child(5) { animation-delay: 0.7s; }
+        
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--accent-color);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        .nav-links a:hover {
+            color: var(--accent-color);
+        }
+        
+        /* Section Accueil */
+        #accueil {
+            background: linear-gradient(rgba(169, 211, 245, 0.85), rgba(210, 231, 247, 0.85)), url('https://images.unsplash.com/photo-1569163139394-de44cb2c8cb7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            color: var(--text-color);
+            text-align: center;
+            padding: 180px 0 100px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+        }
+        
+        #accueil h1 {
+            color: var(--text-color);
+            font-size: 3.2rem;
+            margin-bottom: 25px;
+        }
+        
+        #accueil p {
+            color: var(--text-color);
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto 30px;
+        }
+        
+        /* Section Importance */
+        #importance {
+            background-color: var(--light-color);
+        }
+        
+        .importance-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .importance-item {
+            text-align: center;
+            padding: 30px;
+            border-radius: 10px;
+            background-color: white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        
+        .importance-item.animate {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+        
+        .importance-item:hover {
+            transform: translateY(-10px);
+        }
+        
+        .importance-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: var(--accent-color);
+            display: inline-block;
+            transition: transform 0.3s ease;
+        }
+        
+        .importance-item:hover .importance-icon {
+            transform: scale(1.2);
+        }
+        
+        /* Section Évolution */
+        #evolution {
+            background-color: var(--secondary-color);
+        }
+        
+        .timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            background-color: var(--accent-color);
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -3px;
+        }
+        
+        .timeline-item {
+            padding: 10px 40px;
+            position: relative;
+            width: 50%;
+            box-sizing: border-box;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        
+        .timeline-item.animate {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+        
+        .timeline-item:nth-child(odd) {
+            left: 0;
+        }
+        
+        .timeline-item:nth-child(even) {
+            left: 50%;
+        }
+        
+        .timeline-content {
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+        
+        .timeline-item:hover .timeline-content {
+            transform: scale(1.03);
+        }
+        
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: white;
+            border: 4px solid var(--accent-color);
+            border-radius: 50%;
+            top: 20px;
+            z-index: 1;
+        }
+        
+        .timeline-item:nth-child(odd)::after {
+            right: -10px;
+        }
+        
+        .timeline-item:nth-child(even)::after {
+            left: -10px;
+        }
+        
+        /* Section Utilisations */
+        #utilisations {
+            background-color: var(--light-color);
+        }
+        
+        .utilisations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+        
+        .utilisation-card {
+            border-radius: 10px;
+            overflow: hidden;
+            background-color: white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        
+        .utilisation-card.animate {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+        
+        .utilisation-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .utilisation-img {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+            transition: transform 0.5s ease;
+        }
+        
+        .utilisation-card:hover .utilisation-img {
+            transform: scale(1.1);
+        }
+        
+        .utilisation-content {
+            padding: 20px;
+            background-color: white;
+        }
+        
+        /* Section Mon Projet */
+        #mon-projet {
+            background-color: var(--secondary-color);
+            text-align: center;
+        }
+        
+        .projet-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .microbit-demo {
+            margin: 40px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+        
+        .microbit {
+            width: 200px;
+            height: 200px;
+            background-color: var(--primary-color);
+            border-radius: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 5rem;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .microbit:hover {
+            transform: scale(1.05);
+        }
+        
+        .face-buttons {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .face-btn {
+            padding: 10px 20px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .face-btn:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-3px);
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--primary-color);
+            color: var(--text-color);
+            text-align: center;
+            padding: 40px 0;
+        }
+        
+        .footer-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            margin: 20px 0;
+        }
+        
+        .footer-links li {
+            margin: 0 15px;
+        }
+        
+        .footer-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: white;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            h2 {
+                font-size: 1.8rem;
+            }
+            
+            .timeline::after {
+                left: 31px;
+            }
+            
+            .timeline-item {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 25px;
+            }
+            
+            .timeline-item:nth-child(even) {
+                left: 0;
+            }
+            
+            .timeline-item::after {
+                left: 21px;
+            }
+            
+            .microbit-demo {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="container nav-container">
+            <a href="#" class="logo"><i class="fas fa-wind"></i> AirQuality</a>
+            <ul class="nav-links">
+                <li><a href="#accueil">Accueil</a></li>
+                <li><a href="importance.html">Importance</a></li>
+                <li><a href="#evolution">Évolution</a></li>
+                <li><a href="#utilisations">Utilisations</a></li>
+                <li><a href="#mon-projet">Mon Projet</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Section Accueil -->
+    <section id="accueil">
+        <div class="container">
+            <h1 class="animated-title">Un appareil qui protège notre santé : Le capteur de qualité de l'air</h1>
+            <p class="animated-text delay-1">La pollution atmosphérique est un problème mondial qui affecte notre santé et notre environnement. Notre projet présente un capteur innovant qui surveille la qualité de l'air en temps réel, fournissant des données essentielles pour protéger notre bien-être.</p>
+            <a href="#importance" class="btn btn-pulse"><i class="fas fa-search"></i> Découvrir plus</a>
+        </div>
+    </section>
+
+    <!-- Section Importance -->
+    <section id="importance">
+        <div class="container">
+            <h2 class="animated-title">Pourquoi cet appareil est-il important ?</h2>
+            <div class="importance-content">
+                <div class="importance-item">
+                    <div class="importance-icon"><i class="fas fa-lungs"></i></div>
+                    <h3>Santé Respiratoire</h3>
+                    <p>L'air pur est essentiel pour des poumons en bonne santé. La pollution atmosphérique peut causer des maladies cardiaques et pulmonaires graves.</p>
+                </div>
+                <div class="importance-item">
+                    <div class="importance-icon"><i class="fas fa-globe-americas"></i></div>
+                    <h3>Environnement</h3>
+                    <p>Surveiller la qualité de l'air aide à protéger notre planète en identifiant les sources de pollution et en favorisant des politiques environnementales plus saines.</p>
+                </div>
+                <div class="importance-item">
+                    <div class="importance-icon"><i class="fas fa-shield-alt"></i></div>
+                    <h3>Protection</h3>
+                    <p>Ce dispositif aide les gouvernements et les citoyens à connaître les niveaux de pollution, permettant des décisions éclairées pour protéger la santé publique.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section Évolution -->
+    <section id="evolution">
+        <div class="container">
+            <h2 class="animated-title">L'évolution des capteurs de qualité de l'air</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3><i class="fas fa-history"></i> Première Génération</h3>
+                        <p>Appareils simples mesurant un seul gaz polluant, souvent volumineux et peu précis.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3><i class="fas fa-sync-alt"></i> Deuxième Génération</h3>
+                        <p>Capteurs plus précis capables de détecter plusieurs gaz simultanément, avec une meilleure sensibilité.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3><i class="fas fa-microchip"></i> Capteurs Modernes</h3>
+                        <p>Appareils intelligents connectés fournissant des données en temps réel sur smartphone et Internet, avec analyse instantanée de la qualité de l'air.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section Utilisations -->
+    <section id="utilisations">
+        <div class="container">
+            <h2 class="animated-title">Où utilise-t-on ces appareils ?</h2>
+            <div class="utilisations-grid">
+                <div class="utilisation-card">
+                    <div class="utilisation-img" style="background-image: url('./image/hospital.jpg');"></div>
+                    <div class="utilisation-content">
+                        <h3><i class="fas fa-hospital"></i> Hôpitaux</h3>
+                        <p>Surveillance de la qualité de l'air pour protéger la santé des patients vulnérables.</p>
+                    </div>
+                </div>
+                <div class="utilisation-card">
+                    <div class="utilisation-img" style="background-image: url('./image/ville.jpg');"></div>
+                    <div class="utilisation-content">
+                        <h3><i class="fas fa-city"></i> Villes</h3>
+                        <p>Surveillance des niveaux de pollution pour informer les citoyens et orienter les politiques urbaines.</p>
+                    </div>
+                </div>
+                <div class="utilisation-card">
+                    <div class="utilisation-img" style="background-image: url('./image/ecole.jpg');"></div>
+                    <div class="utilisation-content">
+                        <h3><i class="fas fa-school"></i> Écoles</h3>
+                        <p>Sensibilisation des élèves aux enjeux environnementaux et protection de leur santé.</p>
+                    </div>
+                </div>
+                <div class="utilisation-card">
+                    <div class="utilisation-img" style="background-image: url('./image/mason.jpg');"></div>
+                    <div class="utilisation-content">
+                        <h3><i class="fas fa-home"></i> Maisons</h3>
+                        <p>Appareils domestiques permettant aux particuliers de surveiller la qualité de l'air intérieur.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section Mon Projet -->
+    <section id="mon-projet">
+        <div class="container">
+            <h2 class="animated-title">Mon projet personnel avec Micro:bit</h2>
+            <div class="projet-content">
+                <p class="animated-text">J'ai créé une version simplifiée du capteur de qualité de l'air destinée aux débutants. Ce dispositif utilise une carte Micro:bit pour illustrer la qualité de l'air avec des expressions faciales simples.</p>
+                <p class="animated-text delay-1">L'objectif est d'enseigner aux enfants et aux débutants le concept de pollution atmosphérique de manière ludique et engageante.</p>
+                
+                <div class="microbit-demo">
+                    <div class="microbit" id="microbit-face"><i class="far fa-smile"></i></div>
+                    <div class="face-buttons">
+                        <button class="face-btn" onclick="changeFace('happy')"><i class="far fa-smile"></i> Air Pur</button>
+                        <button class="face-btn" onclick="changeFace('sad')"><i class="far fa-frown"></i> Air Pollué</button>
+                    </div>
+                </div>
+                
+                <p class="animated-text delay-2">Quand l'air est pur, le Micro:bit affiche un visage souriant. Quand la qualité de l'air se détériore, il affiche un visage triste pour alerter l'utilisateur.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <h3><i class="fas fa-wind"></i> Capteur de Qualité de l'Air</h3>
+                <p>Un projet éducatif pour sensibiliser à l'importance de l'air pur.</p>
+                <ul class="footer-links">
+                    <li><a href="#accueil"><i class="fas fa-home"></i> Accueil</a></li>
+                    <li><a href="importance.html"><i class="fas fa-info-circle"></i> Importance</a></li>
+                    <li><a href="#evolution"><i class="fas fa-chart-line"></i> Évolution</a></li>
+                    <li><a href="#utilisations"><i class="fas fa-map-marker-alt"></i> Utilisations</a></li>
+                    <li><a href="#mon-projet"><i class="fas fa-flask"></i> Mon Projet</a></li>
+                </ul>
+                <p><i class="far fa-copyright"></i> 2023 Projet Qualité de l'Air. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Fonction pour changer l'expression du Micro:bit
+        function changeFace(type) {
+            const microbitFace = document.getElementById('microbit-face');
+            if (type === 'happy') {
+                microbitFace.innerHTML = '<i class="far fa-smile"></i>';
+            } else {
+                microbitFace.innerHTML = '<i class="far fa-frown"></i>';
+            }
+        }
+        
+        // Animation au défilement
+        function animateOnScroll() {
+            const elements = document.querySelectorAll('.importance-item, .timeline-item, .utilisation-card');
+            const windowHeight = window.innerHeight;
+            
+            elements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                
+                if (elementTop < windowHeight * 0.8) {
+                    element.classList.add('animate');
+                }
+            });
+        }
+        
+        // Animation de la navigation
+        let lastScrollY = window.scrollY;
+        const navbar = document.getElementById('navbar');
+        
+        function handleScroll() {
+            if (window.scrollY > lastScrollY && window.scrollY > 100) {
+                navbar.classList.add('hidden');
+            } else {
+                navbar.classList.remove('hidden');
+            }
+            
+            lastScrollY = window.scrollY;
+            animateOnScroll();
+        }
+        
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animation initiale pour les éléments de la timeline
+            const timelineItems = document.querySelectorAll('.timeline-item');
+            timelineItems.forEach(item => {
+                item.style.opacity = '0';
+                item.style.transform = 'translateY(20px)';
+                item.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+            });
+            
+            // Ajout des écouteurs d'événements
+            window.addEventListener('scroll', handleScroll);
+            
+            // Animation initiale
+            animateOnScroll();
+        });
+    </script>
+</body>
+</html>
