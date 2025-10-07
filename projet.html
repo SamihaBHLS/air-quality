@@ -261,6 +261,16 @@
             color: var(--accent-color);
         }
         
+        /* Mobile Navigation */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-color);
+            cursor: pointer;
+        }
+        
         /* Section Hero */
         #projet-hero {
             background: linear-gradient(rgba(169, 211, 245, 0.85), rgba(210, 231, 247, 0.85));
@@ -289,12 +299,6 @@
             grid-template-columns: 1fr 1fr;
             gap: 40px;
             align-items: start;
-        }
-        
-        @media (max-width: 768px) {
-            .projet-grid {
-                grid-template-columns: 1fr;
-            }
         }
         
         .projet-info {
@@ -471,12 +475,6 @@
             align-items: center;
         }
         
-        @media (max-width: 768px) {
-            .schema-content {
-                grid-template-columns: 1fr;
-            }
-        }
-        
         .schema-img {
             background-color: white;
             padding: 20px;
@@ -515,6 +513,7 @@
             justify-content: center;
             list-style: none;
             margin: 20px 0;
+            flex-wrap: wrap;
         }
         
         .footer-links li {
@@ -531,12 +530,29 @@
             color: white;
         }
         
-        /* Responsive */
-        @media (max-width: 768px) {
-            .nav-links {
-                display: none;
+        /* Responsive Design */
+        /* Tablets and smaller desktops */
+        @media (max-width: 1024px) {
+            h1 {
+                font-size: 2.5rem;
             }
             
+            h2 {
+                font-size: 2rem;
+            }
+            
+            .microbit-container {
+                width: 250px;
+                height: 250px;
+            }
+            
+            .microbit {
+                font-size: 6rem;
+            }
+        }
+        
+        /* Tablets */
+        @media (max-width: 768px) {
             h1 {
                 font-size: 2.2rem;
             }
@@ -545,8 +561,204 @@
                 font-size: 1.8rem;
             }
             
+            section {
+                padding: 60px 0;
+            }
+            
+            #projet-hero {
+                padding: 150px 0 80px;
+            }
+            
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background-color: white;
+                flex-direction: column;
+                padding: 20px 0;
+                box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+            }
+            
+            .nav-links.active {
+                display: flex;
+            }
+            
+            .nav-links li {
+                margin: 10px 0;
+                text-align: center;
+                margin-left: 0;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .projet-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            
             .microbit-demo {
                 flex-direction: column;
+            }
+            
+            .schema-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .projet-intro {
+                margin-bottom: 40px;
+            }
+            
+            .projet-info {
+                padding: 25px;
+            }
+            
+            .info-card {
+                margin-bottom: 25px;
+                padding-bottom: 15px;
+            }
+            
+            .microbit-container {
+                width: 220px;
+                height: 220px;
+            }
+            
+            .microbit {
+                font-size: 5rem;
+            }
+            
+            .face-buttons {
+                width: 100%;
+                max-width: 250px;
+            }
+            
+            .face-btn {
+                width: 100%;
+            }
+        }
+        
+        /* Mobile phones */
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            h2 {
+                font-size: 1.6rem;
+            }
+            
+            .container {
+                width: 95%;
+                padding: 0 10px;
+            }
+            
+            section {
+                padding: 50px 0;
+            }
+            
+            #projet-hero {
+                padding: 130px 0 60px;
+                min-height: 50vh;
+            }
+            
+            .projet-grid {
+                gap: 20px;
+            }
+            
+            .projet-info {
+                padding: 20px;
+            }
+            
+            .info-header {
+                flex-direction: column;
+                align-items: flex-start;
+                text-align: left;
+            }
+            
+            .info-icon {
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+            
+            .info-title {
+                font-size: 1.2rem;
+            }
+            
+            .components-list li, .features-list li, .target-list li, .tech-list li {
+                padding-left: 20px;
+            }
+            
+            .components-list li::before, .features-list li::before, .target-list li::before, .tech-list li::before {
+                left: 5px;
+            }
+            
+            .microbit-container {
+                width: 180px;
+                height: 180px;
+            }
+            
+            .microbit {
+                font-size: 4rem;
+            }
+            
+            .face-btn {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+            
+            .air-quality-indicator {
+                padding: 12px;
+            }
+            
+            .quality-status {
+                font-size: 1.1rem;
+            }
+            
+            .schema-img, .schema-description {
+                padding: 15px;
+            }
+            
+            .btn {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+        }
+        
+        /* Very small phones */
+        @media (max-width: 360px) {
+            h1 {
+                font-size: 1.6rem;
+            }
+            
+            h2 {
+                font-size: 1.4rem;
+            }
+            
+            .microbit-container {
+                width: 150px;
+                height: 150px;
+            }
+            
+            .microbit {
+                font-size: 3.5rem;
+            }
+            
+            .info-icon {
+                width: 35px;
+                height: 35px;
+                font-size: 1.2rem;
+            }
+            
+            .footer-links {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .footer-links li {
+                margin: 5px 0;
             }
         }
     </style>
@@ -556,7 +768,10 @@
     <nav id="navbar">
         <div class="container nav-container">
             <a href="index.html" class="logo"><i class="fas fa-wind"></i> AirQuality</a>
-            <ul class="nav-links">
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+            <ul class="nav-links" id="navLinks">
                 <li><a href="index.html">Accueil</a></li>
                 <li><a href="importance.html">Importance</a></li>
                 <li><a href="evolution.html">Évolution</a></li>
@@ -819,10 +1034,33 @@
             lastScrollY = window.scrollY;
         }
         
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const navLinks = document.getElementById('navLinks');
+            navLinks.classList.toggle('active');
+        }
+        
         // Initialisation
         document.addEventListener('DOMContentLoaded', function() {
             // Ajout des écouteurs d'événements
             window.addEventListener('scroll', handleScroll);
+            
+            // Mobile menu event listener
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            if (mobileMenuBtn) {
+                mobileMenuBtn.addEventListener('click', toggleMobileMenu);
+            }
+            
+            // Close mobile menu when clicking on a link
+            const navLinks = document.querySelectorAll('.nav-links a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    const navLinks = document.getElementById('navLinks');
+                    if (navLinks.classList.contains('active')) {
+                        navLinks.classList.remove('active');
+                    }
+                });
+            });
             
             // Démo automatique
             let demoStates = ['good', 'moderate', 'poor'];

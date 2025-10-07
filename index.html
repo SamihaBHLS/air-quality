@@ -283,6 +283,16 @@
             color: var(--accent-color);
         }
         
+        /* Mobile Navigation */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-color);
+            cursor: pointer;
+        }
+        
         /* Section Accueil */
         #accueil {
             background: linear-gradient(rgba(169, 211, 245, 0.85), rgba(210, 231, 247, 0.85)), url('https://images.unsplash.com/photo-1569163139394-de44cb2c8cb7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
@@ -548,6 +558,7 @@
             justify-content: center;
             list-style: none;
             margin: 20px 0;
+            flex-wrap: wrap;
         }
         
         .footer-links li {
@@ -564,18 +575,68 @@
             color: white;
         }
         
-        /* Responsive */
-        @media (max-width: 768px) {
-            .nav-links {
-                display: none;
+        /* Responsive Design */
+        /* Tablets and smaller desktops */
+        @media (max-width: 1024px) {
+            h1 {
+                font-size: 2.5rem;
             }
             
+            h2 {
+                font-size: 2rem;
+            }
+            
+            .importance-content {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            }
+            
+            .utilisations-grid {
+                grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            }
+        }
+        
+        /* Tablets */
+        @media (max-width: 768px) {
             h1 {
                 font-size: 2.2rem;
             }
             
             h2 {
                 font-size: 1.8rem;
+            }
+            
+            section {
+                padding: 60px 0;
+            }
+            
+            #accueil {
+                padding: 150px 0 80px;
+            }
+            
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background-color: white;
+                flex-direction: column;
+                padding: 20px 0;
+                box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+            }
+            
+            .nav-links.active {
+                display: flex;
+            }
+            
+            .nav-links li {
+                margin: 10px 0;
+                text-align: center;
+                margin-left: 0;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
             }
             
             .timeline::after {
@@ -599,6 +660,103 @@
             .microbit-demo {
                 flex-direction: column;
             }
+            
+            .face-buttons {
+                flex-direction: column;
+                width: 100%;
+                max-width: 200px;
+            }
+            
+            .face-btn {
+                width: 100%;
+            }
+        }
+        
+        /* Mobile phones */
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            h2 {
+                font-size: 1.6rem;
+            }
+            
+            #accueil h1 {
+                font-size: 2rem;
+            }
+            
+            #accueil p {
+                font-size: 1rem;
+            }
+            
+            .container {
+                width: 95%;
+                padding: 0 10px;
+            }
+            
+            section {
+                padding: 50px 0;
+            }
+            
+            #accueil {
+                padding: 130px 0 60px;
+            }
+            
+            .importance-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .utilisations-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .importance-item, .utilisation-card {
+                padding: 20px;
+            }
+            
+            .microbit {
+                width: 150px;
+                height: 150px;
+                font-size: 4rem;
+            }
+            
+            .footer-links {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .footer-links li {
+                margin: 5px 0;
+            }
+        }
+        
+        /* Very small phones */
+        @media (max-width: 360px) {
+            h1 {
+                font-size: 1.6rem;
+            }
+            
+            h2 {
+                font-size: 1.4rem;
+            }
+            
+            #accueil h1 {
+                font-size: 1.8rem;
+            }
+            
+            .btn {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+            
+            .microbit {
+                width: 120px;
+                height: 120px;
+                font-size: 3rem;
+            }
         }
     </style>
 </head>
@@ -607,7 +765,10 @@
     <nav id="navbar">
         <div class="container nav-container">
             <a href="#" class="logo"><i class="fas fa-wind"></i> AirQuality</a>
-            <ul class="nav-links">
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+            <ul class="nav-links" id="navLinks">
                 <li><a href="#accueil">Accueil</a></li>
                 <li><a href="importance.html">Importance</a></li>
                 <li><a href="#evolution">Évolution</a></li>
@@ -793,6 +954,12 @@
             animateOnScroll();
         }
         
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const navLinks = document.getElementById('navLinks');
+            navLinks.classList.toggle('active');
+        }
+        
         // Initialisation
         document.addEventListener('DOMContentLoaded', function() {
             // Animation initiale pour les éléments de la timeline
@@ -805,6 +972,23 @@
             
             // Ajout des écouteurs d'événements
             window.addEventListener('scroll', handleScroll);
+            
+            // Mobile menu event listener
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            if (mobileMenuBtn) {
+                mobileMenuBtn.addEventListener('click', toggleMobileMenu);
+            }
+            
+            // Close mobile menu when clicking on a link
+            const navLinks = document.querySelectorAll('.nav-links a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    const navLinks = document.getElementById('navLinks');
+                    if (navLinks.classList.contains('active')) {
+                        navLinks.classList.remove('active');
+                    }
+                });
+            });
             
             // Animation initiale
             animateOnScroll();
